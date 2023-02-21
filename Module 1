@@ -1,0 +1,23 @@
+#include <Servo.h> // include the Servo library
+
+Servo myServo; // create a Servo object
+
+int pirPin = 2; // set the input pin for the PIR sensor
+int pirState = 0; // variable to store the PIR sensor state
+
+void setup() {
+  myServo.attach(9); // attach the servo to pin 9
+  Serial.begin(9600); // initialize serial communication
+}
+
+void loop() {
+  pirState = digitalRead(pirPin); // read the state of the PIR sensor
+
+  if (pirState == HIGH) { // if motion is detected
+    myServo.write(90); // turn the servo to 90 degrees
+    Serial.println("Motion detected!");
+  } else { // if no motion is detected
+    myServo.write(0); // turn the servo to 0 degrees
+    Serial.println("Motion not detected!");
+  }
+}
