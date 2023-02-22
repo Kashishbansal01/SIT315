@@ -1,44 +1,31 @@
-// C++ code
-//
 const int ledPin13 = 13;
-const int ledPin12 = 12;
-const int buttonPin = 3;
-const int buzzPin = 8;
+const int ledPin5 = 5;
+const int pirPin = 2;
 
-int ledState12 = LOW;
+volatile bool motionDetected = false;
 
-//unsigned long loopingTime;
-//unsigned long timeStampLoopStart;
-
-void setup()
-{
+void setup() {
   Serial.begin(9600);
   pinMode(ledPin13, OUTPUT);
-  pinMode(ledPin12, OUTPUT);
-  pinMode(buzzPin, OUTPUT);
-  pinMode(buttonPin, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(3), ledToggle, FALLING);
-}
-void ledToggle(){
-	ledState12 = !ledState12;
-  	digitalWrite(ledPin12, ledState12);
-  	Serial.println("Pin 3 Interrupted ledState12 : " + String(ledState12));               
-  	if (ledState12 == HIGH){
-  		tone(buzzPin,1000);
-  	} else {
-  		noTone(buzzPin);
-  	}
+  pinMode(ledPin5, OUTPUT);
+  pinMode(pirPin, INPUT);
+  attachInterrupt(digitalPinToInterrupt(pirPin), motionInterrupt, CHANGE);
 }
 
-void loop()
-{
-  //timeStampLoopStart = micros();
-  
-  digitalWrite(ledPin13, HIGH);
-  delay(300); // Wait for 1000 millisecond(s)
-  digitalWrite(ledPin13, LOW);
-  delay(300); // Wait for 1000 millisecond(s)
-  
-  //loopingTime = micros() - timeStampLoopStart;
-  //Serial.println(loopingTime);
+void loop() {
+  if (motionDetected) {
+    digitalWrite(ledPin13, HIGH);
+    digitalWrite(ledPin5, LOW);
+    Serial.println("Motion detected");
+    delay(100);
+  } else {
+    digitalWrite(ledPin13, LOW);
+    digitalWrite(ledPin5, HIGH);
+    Serial.println("No motion detected");
+  }
+  delay(100);
+}
+
+void motionInterrupt() {
+  motionDetected = !motionDetected;
 }
