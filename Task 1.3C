@@ -1,0 +1,38 @@
+const int ledPin13 = 13;
+const int ledPin5 = 5;
+const int pirPin1 = 2;
+const int pirPin2 = 3;
+
+volatile bool motionDetected1 = false;
+volatile bool motionDetected2 = false;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(ledPin13, OUTPUT);
+  pinMode(ledPin5, OUTPUT);
+  pinMode(pirPin1, INPUT);
+  pinMode(pirPin2, INPUT);
+  attachInterrupt(digitalPinToInterrupt(pirPin1), motionInterrupt1, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(pirPin2), motionInterrupt2, CHANGE);
+}
+
+void loop() {
+  if (motionDetected1 || motionDetected2) {
+    digitalWrite(ledPin13, HIGH);
+    digitalWrite(ledPin5, LOW);
+    Serial.println("Motion detected");
+  } else {
+    digitalWrite(ledPin13, LOW);
+    digitalWrite(ledPin5, HIGH);
+    Serial.println("No motion detected");
+  }
+  delay(100);
+}
+
+void motionInterrupt1() {
+  motionDetected1 = !motionDetected1;
+}
+
+void motionInterrupt2() {
+  motionDetected2 = !motionDetected2;
+}
