@@ -1,0 +1,44 @@
+// C++ code
+//
+const int ledPin13 = 13;
+const int ledPin12 = 12;
+const int buttonPin = 3;
+const int buzzPin = 8;
+
+int ledState12 = LOW;
+
+//unsigned long loopingTime;
+//unsigned long timeStampLoopStart;
+
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(ledPin13, OUTPUT);
+  pinMode(ledPin12, OUTPUT);
+  pinMode(buzzPin, OUTPUT);
+  pinMode(buttonPin, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(3), ledToggle, FALLING);
+}
+void ledToggle(){
+	ledState12 = !ledState12;
+  	digitalWrite(ledPin12, ledState12);
+  	Serial.println("Pin 3 Interrupted ledState12 : " + String(ledState12));               
+  	if (ledState12 == HIGH){
+  		tone(buzzPin,1000);
+  	} else {
+  		noTone(buzzPin);
+  	}
+}
+
+void loop()
+{
+  //timeStampLoopStart = micros();
+  
+  digitalWrite(ledPin13, HIGH);
+  delay(300); // Wait for 1000 millisecond(s)
+  digitalWrite(ledPin13, LOW);
+  delay(300); // Wait for 1000 millisecond(s)
+  
+  //loopingTime = micros() - timeStampLoopStart;
+  //Serial.println(loopingTime);
+}
